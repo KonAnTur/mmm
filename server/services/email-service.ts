@@ -27,11 +27,18 @@ class EmailServiceReg {
       secure: true
     });
     this.transporter = nodemailer.createTransport({
-      host: REG_SMTP_HOST,
-      port: Number(REG_SMTP_PORT),
+      host: 'smtp.mail.ru',
+      port: 465,
       secure: true,
-      auth: { user: REG_SMTP_USER, pass: REG_SMTP_PASS },
-      logger: true, debug: true
+      auth: {
+        user: REG_SMTP_USER, pass: REG_SMTP_PASS
+      },
+      connectionTimeout: 20000,
+      greetingTimeout:   10000,
+      socketTimeout:     30000,
+      logger: true,
+      debug:  true,
+      family: 4
     } as SMTPTransportOptions);
 
     this.isConfigured = true;
