@@ -27,10 +27,9 @@ class EmailServiceReg {
       secure: true
     });
     this.transporter = nodemailer.createTransport({
-      host: '94.100.180.160',
-      port: Number(REG_SMTP_PORT),  // конвертируем в число
-      secure: true,                 // включаем для 465 порта
-      tls: { servername: 'smtp.mail.ru' },
+      host: REG_SMTP_HOST,
+      port: Number(REG_SMTP_PORT),
+      secure: true,
       auth: { user: REG_SMTP_USER, pass: REG_SMTP_PASS },
       logger: true, debug: true
     } as SMTPTransportOptions);
