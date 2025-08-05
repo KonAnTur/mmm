@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # pg:
+  #   image: postgres:15
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=secret
+  #     - POSTGRES_DB=data
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://postgres:secret@5.129.210.181:5432/data?postgres=public
+      - GOOGLE_API_KEY=AIzaSyDjrgd3neyHJiH8sM7WPSPTRHNmXysCiEQ
+      
+      # Resend API настройки с тестовым доменом
+      # - RESEND_API_KEY=re_RoMiqRG3_8xJB4VpoLJNwhBqohKFetyWB
+      # - RESEND_FROM_EMAIL=onboarding@resend.dev
+
+      - REG_SMTP_HOST=smtp.mail.ru   # адрес сервера
+      - REG_SMTP_PORT=465                   # SSL/TLS
+      - REG_SMTP_USER=konantur1322@mail.ru   # полный e-mail ящик
+      - REG_SMTP_PASS=ROmdrkQaSMblMactg15l
+
+      - APP_NAME=migom.ai                   # как будет подписываться письмо
+    ports:
+      - 8000:3000
+    
+  
+        # depends_on:
+    #   - pg
+
+volumes:
+  pg_data:
+    driver: local

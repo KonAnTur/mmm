@@ -1,0 +1,43 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "create-p": "npx prisma migrate dev --name init",
+    "push-p": "npx prisma db push",
+    "generate:build": "npx prisma generate && nuxt build",
+    "builded:start": "nuxt start"
+  },
+  "dependencies": {
+    "@distube/ytdl-core": "^4.16.12",
+    "@google/genai": "^1.6.0",
+    "@google/generative-ai": "^0.24.1",
+    "@mdi/font": "^7.4.47",
+    "@pinia/nuxt": "^0.11.0",
+    "@prisma/client": "^6.8.2",
+    "@vueuse/core": "^13.3.0",
+    "apify-client": "^2.12.5",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.2",
+    "nuxt": "^3.17.4",
+    "pinia": "^3.0.2",
+    "resend": "^4.7.0",
+    "sass": "^1.89.0",
+    "vue": "^3.5.15",
+    "vue-router": "^4.5.1",
+    "vuetify": "3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.7",
+    "prisma": "^6.8.2",
+    "vite-plugin-vuetify": "^2.1.1"
+  }
+}

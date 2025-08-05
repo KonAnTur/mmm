@@ -1,0 +1,137 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Prompt {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(120)
+  text      String   @db.Text
+
+  user      String
+  
+  // Связь с историей запросов
+  requestHistory RequestHistory[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Users {
+  id        String   @id @default(uuid())
+  username  String?  @db.VarChar(120)  // делаем username опциональным
+  password  String?  @db.Text          // делаем password опциональным
+  email     String   @unique @db.VarChar(255)  // добавляем email как обязательное и уникальное поле
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Новая модель для кодов подтверждения
+model VerificationCode {
+  id        String   @id @default(uuid())
+  email     String   @db.VarChar(255)
+  code      String   @db.VarChar(6)
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([email])
+}
+
+model UsersRelationProfiles {
+  userId            String
+  platform          String
+  username          String
+
+  @@id([userId, platform, username])
+}
+
+model UsersRelationHashtag {
+  userId    String
+  platform      String
+  tag           String
+
+  @@id([userId, platform, tag])
+}
+
+model Profiles {
+  platform      String
+  username      String
+  displayName   String?
+  profilePic    String?
+  profileBio    String?
+  followers     Int?     
+  following     Int?     
+  latestVideo   String?  
+  comments      Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  public        Boolean? @default(true)
+
+  @@id([platform, username])
+}
+
+model Posts {
+  id             String   @id
+  platform       String
+  searchType     String
+  username       String
+  hashtag        String?   // 🏷️ Хештег по которому найден пост
+  url            String?
+  caption        String?
+  postType       String?
+  takenAt        DateTime?
+  likes          BigInt?
+  videoPlayCount BigInt?
+  comments       BigInt?
+  durationSec    Float?
+  raw            Json?
+  timestamp      DateTime?
+  isTemplate     Boolean?  @default(false)
+  scrapedAt      DateTime
+}
+
+model Hashtag {
+  id          String   @id @default(uuid())
+  platform    String
+  tag         String
+  firstSeen   DateTime?
+  totalPosts  Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([platform, tag])
+}
+
+model RequestHistory {
+  id             String   @id @default(uuid())
+  type           String   // 'transcription' или 'reprocessing'
+  user           String   // пользователь
+  
+  // Для транскрибации
+  videoUrl       String?  // URL Instagram видео
+  videoData      Json?    // данные о видео (лайки, комментарии и т.д.)
+  
+  // Для переработки
+  originalScript String?  @db.Text // исходный скрипт
+  promptId       String?  // ID использованного промпта
+  prompt         Prompt?  @relation(fields: [promptId], references: [id])
+  
+  // Результат
+  result         String   @db.Text // результат запроса
+  
+  // Метаданные
+  processingTime Int?     // время обработки в миллисекундах
+  status         String   @default("success") // success, error
+  errorMessage   String?  @db.Text
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
